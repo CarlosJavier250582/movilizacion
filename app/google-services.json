@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "354226957893",
+    "firebase_url": "https://movilizacion-2018.firebaseio.com",
+    "project_id": "movilizacion-2018",
+    "storage_bucket": "movilizacion-2018.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354226957893:android:f34c155ee38cb902",
+        "android_client_info": {
+          "package_name": "com.example.carlosje.movilizacion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "354226957893-stmqo9b3l6554m3csbn4uci4l3dnmr0b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.carlosje.movilizacion",
+            "certificate_hash": "3882a3177bcb1f32d3b3b0b55a8aed8ec61bc604"
+          }
+        },
+        {
+          "client_id": "354226957893-jffvqojclfii4vi9htpeb41v1pmifcat.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhv36gJbYKl7m8LmdwsoNQYRstHeu-aKY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354226957893-jffvqojclfii4vi9htpeb41v1pmifcat.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

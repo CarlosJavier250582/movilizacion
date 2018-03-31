@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.carlosje.movilizacion.CapturaActivity">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ScrollView
+            android:id="@+id/sv_nuevo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:focusable="false"
+                    android:visibility="visible"
+                    app:cardElevation="8dp"
+                    app:cardUseCompatPadding="true"
+                    app:contentPaddingBottom="32dp"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp">
+
+
+                        <TextView
+                            android:id="@+id/Fecha_Nacimiento"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+
+
+                            android:layout_marginEnd="16dp"
+                            android:onClick="showDatePickerDialog_Head"
+                            android:text="Fecha de Nacimiento"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_Apell_P"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="32dp">
+
+
+                            <EditText
+                                android:id="@+id/Apell_P"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Apellido Paterno"
+                                android:inputType="textCapCharacters" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_Apell_M"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_Apell_P">
+
+
+
+
+                            <EditText
+                                android:id="@+id/Apell_M"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Apellido Materno"
+                                android:inputType="textCapCharacters" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_Nombre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_Apell_M">
+
+
+                            <EditText
+                                android:id="@+id/nombre"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Nombre(s)"
+                                android:inputType="textCapCharacters" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <TextView
+                            android:id="@+id/lb_sexo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_below="@+id/input_Nombre"
+
+                            android:layout_marginBottom="40px"
+                            android:layout_marginTop="56px"
+
+                            android:text="Sexo"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
+
+
+
+                        <RadioGroup
+                            android:id="@+id/op_sexo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/lb_sexo"
+                            android:gravity="left"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/RB_sexo_H"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="H"
+                                android:textColor="#424242" />
+
+                            <RadioButton
+                                android:id="@+id/RB_sexo_M"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="M"
+                                android:textColor="#424242" />
+
+
+                        </RadioGroup>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_calle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/op_sexo">
+
+
+                            <EditText
+                                android:id="@+id/calle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Calle"
+                                android:inputType="textCapCharacters" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_numero"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_calle">
+
+
+                            <EditText
+                                android:id="@+id/numero"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Número"
+                                android:inputType="textCapCharacters" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_colonia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_numero">
+
+
+                            <EditText
+                                android:id="@+id/colonia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Colonia"
+                                android:inputType="textCapCharacters" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_estado"
+                            android:layout_width="200px"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_colonia">
+
+
+                            <EditText
+                                android:id="@+id/estado"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Estado"
+                                android:inputType="number" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_municipio"
+                            android:layout_width="200px"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_colonia"
+                            android:layout_toRightOf="@+id/input_estado"
+                            android:layout_marginLeft="4dp">
+
+
+                            <EditText
+                                android:id="@+id/municipio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Municipio"
+                                android:inputType="number" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_seccion"
+                            android:layout_width="200px"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_colonia"
+                            android:layout_toRightOf="@+id/input_municipio"
+                            android:layout_marginLeft="4dp">
+
+
+                            <EditText
+                                android:id="@+id/seccion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Sección"
+                                android:inputType="number" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_localidad"
+                            android:layout_width="200px"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_estado">
+
+
+                            <EditText
+                                android:id="@+id/localidad"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Localidad"
+                                android:inputType="number" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_emicion"
+                            android:layout_width="200px"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_estado"
+                            android:layout_toRightOf="@+id/input_localidad"
+                            android:layout_marginLeft="4dp">
+
+
+                            <EditText
+                                android:id="@+id/emision"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Emisión"
+                                android:inputType="number" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_vigencia"
+                            android:layout_width="200px"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_estado"
+                            android:layout_toRightOf="@+id/input_emicion"
+                            android:layout_marginLeft="4dp">
+
+
+                            <EditText
+                                android:id="@+id/vigencia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:ems="10"
+                                android:hint="Vigencia"
+                                android:inputType="number" />
+
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/lb_clave"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/input_localidad"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="1"
+                            android:onClick="clave"
+                            android:text="Llena Clave de Elector"
+                            android:textColor="@color/colorPrimary" />
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_clave"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/lb_clave"
+
+                            android:layout_marginLeft="4dp">
+
+
+                            <EditText
+                                android:id="@+id/clave"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+
+                                android:ems="10"
+                                android:hint="Clave de Elector"
+                                android:inputType="textCapCharacters" />
+
+
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_clave"
+
+                            android:layout_marginLeft="4dp">
+
+
+                            <EditText
+                                android:id="@+id/email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+
+                                android:ems="10"
+                                android:hint="Email"
+                                android:inputType="textCapCharacters" />
+
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_telefono"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_email"
+
+                            android:layout_marginLeft="4dp">
+
+
+                            <EditText
+                                android:id="@+id/telefono"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+
+                                android:ems="10"
+                                android:hint="Teléfono(s)"
+                                android:inputType="number" />
+
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_face"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_telefono"
+
+                            android:layout_marginLeft="4dp">
+
+
+                            <EditText
+                                android:id="@+id/face"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+
+                                android:ems="10"
+                                android:hint="Facebook"
+                                android:inputType="textCapCharacters" />
+
+
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/input_notas_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_below="@+id/input_face"
+
+
+                            >
+
+                            <EditText
+                                android:id="@+id/observ"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+
+                                android:inputType="text|textCapSentences"
+
+                                android:ems="10"
+                                android:hint="Observaciones:" />
+
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <ProgressBar
+                            android:id="@+id/progressBarPhoto"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/input_notas_image"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            android:visibility="visible" />
+
+                    </RelativeLayout>
+
+
+
+                </android.support.v7.widget.CardView>
+
+                <LinearLayout
+                    android:id="@+id/ly_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/card1"
+                    android:layout_marginTop="-32dp"
+                    android:elevation="8dp"
+                    android:gravity="right"
+                    android:layout_marginBottom="32dp">
+
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/fl_btn_save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:layout_marginRight="4dp"
+
+                        android:onClick="muestraDialogoSave"
+                        app:elevation="8dp"
+                        app:fabSize="mini"
+                        android:layout_alignParentEnd="true"
+                        app:srcCompat="@android:drawable/ic_menu_save"
+
+                        android:elevation="16dp"
+
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lay_fotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingBottom="8dp"
+                    android:layout_below="@+id/ly_save"
+
+                    android:visibility="visible"
+                    android:weightSum="1">
+
+                    <RelativeLayout
+
+                        android:id="@+id/lay_fotos_cabecera"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginBottom="-55dp"
+                        android:elevation="16dp"
+
+                        android:orientation="horizontal"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="8dp"
+
+                        android:paddingTop="8dp"
+                        tools:layout_editor_absoluteX="0dp"
+                        tools:layout_editor_absoluteY="205dp">
+
+
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/fl_btn_add_photo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+
+
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="4dp"
+
+
+                            android:clickable="true"
+                            android:onClick="llamarIntent"
+                            app:backgroundTint="?attr/colorError"
+                            app:elevation="8dp"
+
+
+                            app:fabSize="mini"
+                            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+
+                    </RelativeLayout>
+
+
+                    <android.support.v7.widget.CardView
+
+                        android:id="@+id/ly_fotos"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3.73"
+                        android:elevation="0dp"
+                        android:focusable="false"
+                        android:visibility="visible"
+                        app:cardElevation="8dp"
+                        app:cardUseCompatPadding="true"
+
+
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <RelativeLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:foregroundGravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:paddingBottom="4dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:id="@+id/lb_fotos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+
+                                android:text="Foto INE"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="14sp" />
+
+
+                            <RelativeLayout
+
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_below="@+id/lb_fotos"
+                                android:foregroundGravity="center_horizontal"
+                                android:orientation="horizontal"
+                                android:paddingBottom="2dp"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp"
+
+
+                                android:paddingTop="8dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginBottom="16dp">
+
+                                    <ImageView
+                                        android:id="@+id/photo_ife"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="150dp"
+                                        android:layout_centerVertical="true"
+
+                                        android:src="@drawable/ic_camera_white_24dp" />
+
+
+
+                                    <TextView
+                                        android:id="@+id/url_photo"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+
+                                        android:text="URL"
+                                        android:visibility="gone" />
+
+                                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+                            </RelativeLayout>
+
+
+                        </RelativeLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                </LinearLayout>
+
+
+
+
+
+
+            </RelativeLayout>
+
+
+
+
+
+        </ScrollView>
+
+
+
+    </LinearLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>
+
