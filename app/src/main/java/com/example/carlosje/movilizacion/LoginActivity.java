@@ -5,8 +5,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -59,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         RL_login.setVisibility(View.GONE);
         checkPermission();
 
-
+        crearAccesoDirectoAlInstalar(this);
         String fileUser="";
 
         String[] archivos = fileList();
@@ -117,6 +119,52 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
+    public void crearAccesoDirectoAlInstalar(Activity actividad )
+    {
+        SharedPreferences preferenciasapp;
+        boolean aplicacioninstalada = Boolean.FALSE;
+
+/*
+* Compruebo si es la primera vez que se ejecuta la alicación,
+* entonces es cuando creo el acceso directo
+*/
+        preferenciasapp = PreferenceManager.getDefaultSharedPreferences(actividad);
+        aplicacioninstalada = preferenciasapp.getBoolean("aplicacioninstalada", Boolean.FALSE);
+
+        if(!aplicacioninstalada)
+        {
+/*
+* Código creación acceso directo
+*/
+            Intent shortcutIntent = new Intent();
+            shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, getIntentShortcut());
+            shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Mobile-E");
+            shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(this.getApplicationContext(), R.drawable.icon));
+            shortcutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+            this.sendBroadcast(shortcutIntent);
+
+/*
+* Indico que ya se ha creado el acceso directo para que no se vuelva a crear mas
+*/
+            SharedPreferences.Editor editor = preferenciasapp.edit();
+            editor.putBoolean("aplicacioninstalada", true);
+            editor.commit();
+        }
+    }
+
+
+
+
+
+    public Intent getIntentShortcut(){
+        Intent i = new Intent();
+        i.setClassName(this.getPackageName(), this.getPackageName() + "." + this.getLocalClassName());
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return i;
+    }
+
     private static final int REQUEST_CODE_ASK_PERMISSIONS_camera = 123;
     private static final int REQUEST_CODE_ASK_PERMISSIONS_Storage_read = 321;
     private static final int REQUEST_CODE_ASK_PERMISSIONS_Storage_write = 789;
@@ -171,6 +219,9 @@ public class LoginActivity extends AppCompatActivity {
                 // openCamera();
                 RL_login.setVisibility(View.VISIBLE);
             }
+
+
+
 
 
 
@@ -256,7 +307,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        username=usuario.getText().toString() + "@gmail.com";
+        username=usuario.getText().toString() + "@mobile.e.com.mx";
         password=pass.getText().toString();
 
 

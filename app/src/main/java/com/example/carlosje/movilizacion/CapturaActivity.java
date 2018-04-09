@@ -5,14 +5,19 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Base64;
 import android.view.View;
 import android.widget.DatePicker;
@@ -23,6 +28,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -47,11 +55,12 @@ import java.util.Map;
 
 import static java.lang.String.valueOf;
 
-public class CapturaActivity extends AppCompatActivity implements  DatePickerDialog.OnDateSetListener {
+public class CapturaActivity extends AppCompatActivity implements  DatePickerDialog.OnDateSetListener,GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
-    private TextView Fecha_Nacimiento, url_photo;
+    private TextView Fecha_Nacimiento, url_photo,mLatitude,mLongitude,seccion;
     private String usuario, preFecha_clave;
-    private EditText Apell_P,Apell_M, nombre, calle, numero , colonia, estado, municipio, seccion, localidad, emision, vigencia, clave, email, telefono, face, observ;
+    private EditText whatsapp,sector, Apell_P,Apell_M, nombre, calle, numero , colonia, estado, municipio,  localidad, emision, vigencia, clave, email, telefono, face, observ;
     private RadioButton RB_sexo_H, RB_sexo_M;
     private FloatingActionButton fl_btn_save, fl_btn_add_photo;
 
@@ -60,7 +69,7 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
     private int flag_foto;
     private String encodedImage;
 
-    private String FechaNow, urlFoto_F, observ_F, Apell_P_F, Apell_M_F,nombre_F, calle_F, numero_F, colonia_F, municipio_F, seccion_F,localidad_F, emision_F, vigencia_F, estado_F,clave_F, sexo_F, fecha_nacimiento_F, email_F, telefono_F, face_F;
+    private String whatsapp_F, sector_F, FechaNow, urlFoto_F, observ_F, Apell_P_F, Apell_M_F,nombre_F, calle_F, numero_F, colonia_F, municipio_F, seccion_F,localidad_F, emision_F, vigencia_F, estado_F,clave_F, sexo_F, fecha_nacimiento_F, email_F, telefono_F, face_F;
 
     private ProgressBar progressBarPhoto;
 
@@ -76,7 +85,7 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_captura);
-        //usuario = getIntent().getStringExtra("usuario");
+        usuario = getIntent().getStringExtra("usuario");
 
         Fecha_Nacimiento = (TextView) findViewById(R.id.Fecha_Nacimiento);
 
@@ -86,17 +95,21 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
         calle = (EditText) findViewById(R.id.calle);
         numero = (EditText) findViewById(R.id.numero);
         colonia = (EditText) findViewById(R.id.colonia);
-        estado= (EditText) findViewById(R.id.estado);
-        municipio = (EditText) findViewById(R.id.municipio);
-        seccion = (EditText) findViewById(R.id.seccion);
+
+        seccion=(TextView) findViewById(R.id.seccion);
+
         localidad = (EditText) findViewById(R.id.localidad);
-        emision = (EditText) findViewById(R.id.emision);
-        vigencia = (EditText) findViewById(R.id.vigencia);
-        clave = (EditText) findViewById(R.id.clave);
+
         email = (EditText) findViewById(R.id.email);
         telefono = (EditText) findViewById(R.id.telefono);
         face = (EditText) findViewById(R.id.face);
         observ= (EditText) findViewById(R.id.face);
+        whatsapp= (EditText) findViewById(R.id.whatsapp);
+
+
+        mLatitude = (TextView) findViewById(R.id.mLatitude);
+        mLongitude = (TextView) findViewById(R.id.mLongitude);
+
 
         url_photo = (TextView) findViewById(R.id.url_photo);
 
@@ -131,6 +144,8 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
         face_F="";
         observ_F="";
         urlFoto_F="";
+        whatsapp_F="";
+        sector_F="";
 
         flag_foto=0;
 
@@ -173,8 +188,152 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
 
 
 
+        ////TODO Geolocalizacion
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .enableAutoManage(this, this)
+                .build();
+
 
     }
+
+    private Location mLastLocation;
+    private void processLastLocation() {
+        getLastLocation();
+        if (mLastLocation != null) {
+            updateLocationUI();
+        }
+    }
+    private void getLastLocation() {
+        if (isLocationPermissionGranted()) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        } else {
+            manageDeniedPermission();
+        }
+    }
+
+    private boolean isLocationPermissionGranted() {
+        int permission = ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+        return permission == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void manageDeniedPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            // Aquí muestras confirmación explicativa al usuario
+            // por si rechazó los permisos anteriormente
+        } else {
+            ActivityCompat.requestPermissions(
+                    this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION);
+        }
+    }
+    private void updateLocationUI() {
+
+        String errorMessage = "";
+
+        mLatitude.setText(valueOf(mLastLocation.getLatitude()));
+        mLongitude.setText(valueOf(mLastLocation.getLongitude()));
+    }
+
+
+
+
+
+    private GoogleApiClient mGoogleApiClient;
+    public static final int REQUEST_LOCATION = 1;
+    public static final int REQUEST_CHECK_SETTINGS = 2;
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Aquí muestras confirmación explicativa al usuario
+                // por si rechazó los permisos anteriormente
+            } else {
+                ActivityCompat.requestPermissions(
+                        this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_LOCATION);
+            }
+        } else {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (mLastLocation != null) {
+                mLatitude.setText(valueOf(mLastLocation.getLatitude()));
+                mLongitude.setText(valueOf(mLastLocation.getLongitude()));
+            } else {
+                Toast.makeText(this, "Ubicación no encontrada, favor de Conectar GPS", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+
+
+
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == REQUEST_LOCATION) {
+            if(grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (mLastLocation != null) {
+                    mLatitude.setText(valueOf(mLastLocation.getLatitude()));
+                    mLongitude.setText(valueOf(mLastLocation.getLongitude()));
+                } else {
+                    Toast.makeText(this, "Ubicación no encontrada", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(this, "Permisos no otorgados", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+
+
+
+
+    }
+
+
+
+
+
+
+
 
 
     private static final int PICK_IMAGE_ID = 234;
@@ -213,18 +372,47 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
                 flag_foto = 1;
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                image.compress(Bitmap.CompressFormat.JPEG, 50, baos);
                 imageBytes = baos.toByteArray();
                 encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
             }
         }
 
+        if (requestCode == 1) {
 
+            if(resultCode == Activity.RESULT_OK) {
+
+                String act_sel = data.getStringExtra("seccion_seleccion");
+
+                seccion.setText(act_sel);
+
+
+            }
+
+            ////visible campo falla otro
+
+
+
+
+        }
 
 
 
 
     }
+
+
+
+    public void Seleccion_seccion(View view) {
+
+
+        Intent i = new Intent(this, SCActivity.class);
+        i.putExtra("tipo","seccion");
+        startActivityForResult(i, 1);
+
+
+    }
+
 
 
     private byte[] imageBytes;
@@ -270,12 +458,10 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
         Apell_M_F=Apell_M.getText().toString();
         nombre_F=nombre.getText().toString();
 
-        estado_F=estado.getText().toString();
-        municipio_F=municipio.getText().toString();
+
         seccion_F=seccion.getText().toString();
         localidad_F=localidad.getText().toString();
-        emision_F=emision.getText().toString();
-        vigencia_F=vigencia.getText().toString();
+
 
         if (RB_sexo_H.isChecked() ) {
             sexo_F=RB_sexo_H.getText().toString();
@@ -298,6 +484,145 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
 
             return;
         }
+
+
+
+
+
+        //TODO llenar clave
+
+    }
+
+
+    public void save() {
+
+
+        fecha_nacimiento_F=Fecha_Nacimiento.getText().toString();
+        Apell_P_F=Apell_P.getText().toString();
+        Apell_M_F=Apell_M.getText().toString();
+        nombre_F=nombre.getText().toString();
+        calle_F=calle.getText().toString();
+        numero_F=numero.getText().toString();
+        colonia_F=colonia.getText().toString();
+
+        localidad_F=localidad.getText().toString();
+
+
+        seccion_F=seccion.getText().toString();
+
+
+        email_F=email.getText().toString();
+        telefono_F=telefono.getText().toString();
+        whatsapp_F=whatsapp.getText().toString();
+        face_F=face.getText().toString();
+        observ_F=observ.getText().toString();
+
+        if (RB_sexo_H.isChecked() ) {
+            sexo_F=RB_sexo_H.getText().toString();
+        }
+
+        if (RB_sexo_M.isChecked() ) {
+            sexo_F=RB_sexo_M.getText().toString();
+        }
+
+
+
+        ///////////////////////valida datos
+
+
+
+        if (fecha_nacimiento_F.equals("Fecha de Nacimiento")) {
+
+            Context context = getApplicationContext();
+            CharSequence text = "Favor seleccionar fecha de nacimiento";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            return;
+
+
+        }
+
+        if (Apell_P_F.equals("") || Apell_M_F.equals("") || nombre_F.equals("") || calle_F.equals("") || numero_F.equals("") || colonia_F.equals("")  ) {
+            Context context = getApplicationContext();
+            CharSequence text = "Favor documenta todos los campos";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            return;
+        }
+
+        if (seccion_F.equals("") || localidad_F.equals("") ||  sexo_F.equals("") || telefono_F.equals("") ) {
+            Context context = getApplicationContext();
+            CharSequence text = "Favor documenta todos los campos";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            return;
+        }
+
+
+
+        if(seccion_F.length()!=4){
+
+            Context context = getApplicationContext();
+            CharSequence text = "Favor captura correctamente la Sección";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            return;
+
+        }
+
+        if(localidad_F.length()!=4){
+
+            Context context = getApplicationContext();
+            CharSequence text = "Favor captura correctamente la Localidad";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            return;
+
+        }
+
+
+
+
+        if (flag_foto ==0) {
+
+            urlFoto="";
+            Context context = getApplicationContext();
+            CharSequence text = "Por favor toma la fotografía antes de guardar el formulario";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            return;
+        }
+
+
+
+
+
+        Apell_M_F= removerTildes(Apell_M_F);
+        Apell_P_F=removerTildes(Apell_P_F);
+        nombre_F= removerTildes(nombre_F);
+
+
+        Apell_M_F= Apell_M_F.toUpperCase();
+        Apell_P_F=Apell_P_F.toUpperCase();
+        nombre_F= nombre_F.toUpperCase();
+
+
+
+
+
+
 
 
 
@@ -332,6 +657,16 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
             }
 
         }
+
+
+
+
+
+
+
+
+
+
 
 
         int flag_am= 0;
@@ -383,180 +718,7 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
 
         }
 
-        clave.setText(a  + b + c + d + e+ f + preFecha_clave);
-
-        //TODO llenar clave
-
-    }
-
-
-    public void save() {
-
-
-        fecha_nacimiento_F=Fecha_Nacimiento.getText().toString();
-        Apell_P_F=Apell_P.getText().toString();
-        Apell_M_F=Apell_M.getText().toString();
-        nombre_F=nombre.getText().toString();
-        calle_F=calle.getText().toString();
-        numero_F=numero.getText().toString();
-        colonia_F=colonia.getText().toString();
-        estado_F=estado.getText().toString();
-        municipio_F=municipio.getText().toString();
-        seccion_F=seccion.getText().toString();
-        localidad_F=localidad.getText().toString();
-        emision_F=emision.getText().toString();
-        vigencia_F=vigencia.getText().toString();
-        clave_F=clave.getText().toString();
-
-        email_F=email.getText().toString();
-        telefono_F=telefono.getText().toString();
-        face_F=face.getText().toString();
-        observ_F=observ.getText().toString();
-
-        if (RB_sexo_H.isChecked() ) {
-            sexo_F=RB_sexo_H.getText().toString();
-        }
-
-        if (RB_sexo_M.isChecked() ) {
-            sexo_F=RB_sexo_M.getText().toString();
-        }
-
-
-
-        ///////////////////////valida datos
-
-        if (fecha_nacimiento_F.equals("Fecha de Nacimiento")) {
-
-            Context context = getApplicationContext();
-            CharSequence text = "Favor seleccionar fecha de nacimiento";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-
-
-        }
-
-        if (Apell_P_F.equals("") || Apell_M_F.equals("") || nombre_F.equals("") || calle_F.equals("") || numero_F.equals("") || colonia_F.equals("") ||  estado_F.equals("") || municipio_F.equals("")  ) {
-            Context context = getApplicationContext();
-            CharSequence text = "Favor documenta todos los campos";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-        }
-
-        if (seccion_F.equals("") || localidad_F.equals("") || emision_F.equals("") || vigencia_F.equals("") || clave_F.equals("") || sexo_F.equals("") || telefono_F.equals("") ) {
-            Context context = getApplicationContext();
-            CharSequence text = "Favor documenta todos los campos";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-        }
-
-
-        if(estado_F.length()!=2){
-
-            Context context = getApplicationContext();
-            CharSequence text = "Favor captura correctamente el Estado";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-
-        }
-
-        if(municipio_F.length()!=3){
-
-            Context context = getApplicationContext();
-            CharSequence text = "Favor captura correctamente el Municipio";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-
-        }
-
-        if(seccion_F.length()!=4){
-
-            Context context = getApplicationContext();
-            CharSequence text = "Favor captura correctamente la Sección";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-
-        }
-
-        if(localidad_F.length()!=4){
-
-            Context context = getApplicationContext();
-            CharSequence text = "Favor captura correctamente la Localidad";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-
-        }
-        if(emision_F.length()!=4){
-
-            Context context = getApplicationContext();
-            CharSequence text = "Favor captura correctamente la Emición";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-
-        }
-
-        if(vigencia_F.length()!=4){
-
-            Context context = getApplicationContext();
-            CharSequence text = "Favor captura correctamente la Vigencia";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-
-        }
-
-
-
-
-
-        if (clave_F.length()!=18){
-            Context context = getApplicationContext();
-            CharSequence text = "Por favor completa corretamente la clave de elector";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-        }
-
-        if (flag_foto ==0) {
-
-            urlFoto="";
-            Context context = getApplicationContext();
-            CharSequence text = "Por favor toma la fotografía antes de guardar el formulario";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            return;
-        }
-
-
+        clave_F=sexo_F+localidad_F+(a  + b + c + d + e+ f + preFecha_clave);
 
 
         /////sube foto
@@ -602,7 +764,18 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
 
 
     }
-
+    static String removerTildes(String cadena) {
+        return cadena.replace("Á", "A")
+                .replace("É", "E")
+                .replace("Í", "I")
+                .replace("Ó", "O")
+            .replace("Ú", "U")
+                .replace("á", "a")
+                .replace("é", "e")
+                .replace("í", "i")
+                .replace("ó", "o")
+                .replace("ú", "u");
+    }
 
     public void sube_datos() {
         //sube datos a database
@@ -636,7 +809,7 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
 
         childUpdates.put(clave_F, postValues);
 
-        database.child("1x10").updateChildren(childUpdates);
+        database.child("SNANT/RG/"+seccion_F+"/"+usuario).updateChildren(childUpdates);
 
         progressBarPhoto.setVisibility(View.GONE);
         Context context = getApplicationContext();
@@ -644,35 +817,13 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
-        writeNewTrack();
+
+        finish();
+        //writeNewTrack();
 
 
     }
 
-    private void writeNewTrack() {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = database.child("1x10").child(clave_F).child("track").push().getKey();
-
-        key_track=key;
-
-
-
-        Track track = new Track();
-        Map<String, Object> trackValues = track.toMap();
-        Map<String, Object> childUpdates = new HashMap<>();
-
-
-
-
-        childUpdates.put(key, trackValues);
-
-        database.child("1x10").child(clave_F).child("track").updateChildren(childUpdates);
-
-
-
-
-    }
 
 
 
@@ -689,60 +840,22 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
         @Exclude
         public Map<String, Object> toMap() {
             HashMap<String, Object> result = new HashMap<>();
+
             result.put("fecha_nacimiento",fecha_nacimiento_F);
-            result.put("Apell_P",Apell_P_F);
-            result.put("Apell_M",Apell_M_F);
-            result.put("nombre",nombre_F);
-            result.put("calle",calle_F);
-            result.put("numero",numero_F);
-            result.put("colonia",colonia_F);
-            result.put("estado",estado_F);
-            result.put("municipio",municipio_F);
-            result.put("seccion",seccion_F);
-            result.put("localidad",localidad_F);
-            result.put("emision",emision_F);
-            result.put("vigencia",vigencia_F);
+            result.put("nombre",Apell_P_F+" "+Apell_M_F+" "+nombre_F);
+            result.put("direccion",calle_F +" " + numero_F + " Colonia "+ colonia_F+ " San Antonio la Isla, Estado de Mexico");
             result.put("clave",clave_F);
-            result.put("sexo",sexo_F);
             result.put("email",email_F);
-            result.put("telefono",telefono_F);
+            result.put("telefono",telefono_F+"W"+whatsapp_F);
             result.put("face",face_F);
             result.put("observ",observ_F);
             result.put("urlFoto",urlFoto_F);
-            result.put("fecha_captura",FechaNow); // fecha de captura
-            result.put("status","RG");  //status Dia D  //TO en camino // ONS en casilla // VT // CA//
-            result.put("usuario",usuario);  //usuario capturó
-            result.put("contactado_DD","No");  //Contactado dia D
-            result.put("comantarios_DD","");  //Comentarios dia D
-
-
-
-            return result;
-        }
+            result.put("fecha_captura",FechaNow);
+            result.put("ubicacion", mLatitude.getText().toString()+","+mLongitude.getText().toString());
 
 
 
 
-
-    }
-
-    private  String key_track="";
-    @IgnoreExtraProperties
-    public class Track {
-
-
-
-        public Track() {
-
-
-        }
-
-        @Exclude
-        public Map<String, Object> toMap() {
-            HashMap<String, Object> result = new HashMap<>();
-            result.put("key",key_track);  //Comentarios dia D
-            result.put("status","RG");  //Comentarios dia D
-            result.put("hr_st",FechaNow);  //Comentarios dia D
 
 
             return result;
@@ -753,6 +866,8 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
 
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -821,7 +936,7 @@ public class CapturaActivity extends AppCompatActivity implements  DatePickerDia
     }
 
 
-
+//TODO   agregar wathsapp  y sector a 3 digitos  (obligatorio)
 
 
 
